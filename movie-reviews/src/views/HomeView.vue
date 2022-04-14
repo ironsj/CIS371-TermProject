@@ -28,16 +28,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import NavBar from '@/components/NavBar.vue'
 import axios, { AxiosResponse } from "axios";
-
-
-type movieData = {
-  title: string;
-  release_date: string;
-};
-
-type movies = {
-  results: Array<movieData>;
-}
+import {movieData, movies} from "@/datatype"
 
 
 @Component({
