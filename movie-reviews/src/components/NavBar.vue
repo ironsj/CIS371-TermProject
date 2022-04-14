@@ -4,6 +4,8 @@
       <input id="search-bar" type="text" placeholder="Search for Movie"/>
       <button id="search-button" type="submit">Search</button>
     </form>
+    <h1 id="title">Movie Review WebApp Thing</h1>
+    <button type="hidden"></button>
   </div>
 </template>
 
@@ -20,7 +22,13 @@ export default class NavBar extends Vue {
 <style scoped>
 .nav-bar{
   background-color: black;
-  
+  display:flex;
+  flex-direction:row;
+  justify-content: space-between;
+}
+
+.nav-bar h1{
+  color: wheat;
 }
 
 .search-container {
