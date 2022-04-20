@@ -5,19 +5,60 @@
       <button id="search-button" type="submit">Search</button>
     </form>
     <h1 id="title">Movie Review WebApp Thing</h1>
-    <button @click="login">Login/Register</button>
+    <button v-if="!signedIn" @click="login">Login/Register</button>
+    <div v-else>
+      <img :src="userPhotoURL" v-if="userPhotoURL.length > 0" width="32">
+      <p>Welcome {{userInfo}}!</p>
+      <button @click="logout">Log Out</button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import {
+  getAuth,
+  onAuthStateChanged,
+  User,
+  Auth,
+  signOut,
+  deleteUser,
+} from "firebase/auth";
 
 @Component
 export default class NavBar extends Vue {
   @Prop() private msg!: string;
+  userPhotoURL = "";
+  auth: Auth | null = null;
+  userInfo = "";
+  user: User | null = null;
+  signedIn = false;
+
+  mounted(): void{
+    this.auth = getAuth();
+    this.user = this.auth.currentUser
+    onAuthStateChanged(this.auth, (user: User | null) => {
+      console.log(user?.photoURL);
+      this.userPhotoURL = user?.photoURL ?? "";
+      console.log("Auth changed", user);
+      if (user) {
+        this.userPhotoURL = user.photoURL ?? "";
+        this.userInfo = `${user.displayName}`;
+        this.signedIn = true;
+      }
+    });
+  }
 
   login():void{
     this.$router.push({ path: "/login" });
+  }
+
+  logout():void{
+    if (this.auth){
+      signOut(this.auth);
+      this.signedIn = false;
+    } 
+
   }
 }
 </script>
