@@ -5,7 +5,7 @@
       <button id="search-button" type="submit">Search</button>
     </form>
     <h1 id="title">Movie Review WebApp Thing</h1>
-    <button type="hidden"></button>
+    <button @click="login">Login/Register</button>
   </div>
 </template>
 
@@ -15,6 +15,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 @Component
 export default class NavBar extends Vue {
   @Prop() private msg!: string;
+
+  login():void{
+    this.$router.push({ path: "/login" });
+  }
 }
 </script>
 
