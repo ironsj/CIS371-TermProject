@@ -30,6 +30,12 @@ const routes: Array<RouteConfig> = [
     path: "/review/:id",
     name: 'review',
     component: ReviewView, props:true 
+  },
+  
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('../views/LoginView.vue')
   }
 
 ]

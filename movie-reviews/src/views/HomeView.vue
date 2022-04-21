@@ -1,25 +1,15 @@
 <template>
   <div class="home">
     <NavBar/>
-    <div class="tables">
-      <table>
-        <tr><th id="title">Trending Movies</th></tr>
-        <tr>
-          <th>Name</th><th>Release Date</th>
-        </tr>
-        <tr v-for="(m, pos) in topTen" :key="pos">
-          <td>{{m.title}}</td><td>{{m.release_date}}</td>
-        </tr>
-      </table>
-      <table>
-        <tr><th id="title">In Theaters</th></tr>
-        <tr>
-          <th>Name</th><th>Release Date</th>
-        </tr>
-        <tr v-for="(n, pos) in outNow" :key="pos">
-          <td>{{n.title}}</td><td>{{n.release_date}}</td>
-        </tr>
-      </table>
+    <div class="movieLists">
+      <div id="top">
+        <h2>Trending Movies</h2>
+        <BasicMovieInfo v-for="(m, pos) in trendingMovies" :key="pos" :title="m.title" :release_date="m.release_date" :poster_path="m.poster_path"></BasicMovieInfo>
+      </div>
+      <div id="out">
+        <h2>In Theaters</h2>
+        <BasicMovieInfo v-for="(m, pos) in outNow" :key="pos" :title="m.title" :release_date="m.release_date" :poster_path="m.poster_path"></BasicMovieInfo>
+      </div>
     </div>
   </div>
 </template>
@@ -27,18 +17,20 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import NavBar from '@/components/NavBar.vue'
+import BasicMovieInfo from '@/components/BasicMovieInfo.vue'
 import axios, { AxiosResponse } from "axios";
 import {movieData, movies} from "@/datatype"
 
 
 @Component({
   components: {
-    NavBar
+    NavBar,
+    BasicMovieInfo
   },
 })
 export default class HomeView extends Vue {
   apiKey = "";
-  topTen: Array<movieData> = []
+  trendingMovies: Array<movieData> = []
   outNow: Array<movieData> = []
 
   mounted(): void{
@@ -63,8 +55,8 @@ export default class HomeView extends Vue {
     .then((r: any) => {
       for(let i = 0; i < r.results.length; i++){
         const m = r.results[i];
-        this.topTen.push({title: m.title, release_date: m.release_date})
-        console.log(m.title);
+        this.trendingMovies
+    .push({poster_path: m.poster_path, title: m.title, release_date: m.release_date})
       }
     })
   }
@@ -85,8 +77,7 @@ export default class HomeView extends Vue {
     .then((r: any) => {
       for(let i = 0; i < r.results.length; i++){
         const m = r.results[i];
-        this.outNow.push({title: m.title, release_date: m.release_date})
-        console.log(m.title);
+        this.outNow.push({poster_path: m.poster_path, title: m.title, release_date: m.release_date})
       }
     })
   }
@@ -95,17 +86,13 @@ export default class HomeView extends Vue {
 </script>
 
 <style scoped>
-.tables{
-  display:flex;
-  align-items: center;
-  justify-content: center;
+.movieLists{
+  left: 1%;
+  right: 1%;
 }
 
-table{
-  padding: 5%;
+h2{
+  font-family: Brandon Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
 }
 
-#title{
-  font-size: 20;
-}
 </style>

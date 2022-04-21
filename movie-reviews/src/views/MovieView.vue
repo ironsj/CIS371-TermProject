@@ -4,16 +4,19 @@
         <center>
         <table>
             <tr>
+                <!---<th>Movie Poster</th>--->
                 <th>Movie Title</th>
                 <th>Release Date</th>
                 <th>Movie ID</th>
             </tr>
             <tr v-for="(u,pos) in movie" :key="pos">
+                <!---<td><img :src="u.poster_path"></td>--->
                 <td>{{u.title}}</td>
                 <td>{{u.release_date}}</td>
                 <td @click="changeView(u.id)">{{u.id}}</td>
             </tr>
         </table>
+        
         </center>
     </div>
 </template>
@@ -59,7 +62,7 @@ export default class MovieView extends Vue {
          console.log(r.results)
       for(let i = 0; i < r.results.length; i++){
         const m = r.results[i];
-        this.movie.push({title: m.title, release_date: m.release_date, id: m.id})
+        this.movie.push({title: m.title, release_date: m.release_date, id: m.id, poster_path: m.poster_path})
       }
     })
     }
