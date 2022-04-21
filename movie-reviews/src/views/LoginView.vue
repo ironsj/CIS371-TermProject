@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="page">
     <section>
       <div id="loginpanel">
         <input type="text" v-model="u_email"

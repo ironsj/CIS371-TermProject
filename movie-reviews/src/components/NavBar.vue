@@ -100,8 +100,6 @@ export default class NavBar extends Vue {
 }
 
 #search-bar {
-  /* Tell the input to use all the available space */
-  /* And hide the input's outline, so the form looks like the outline */
   border:0;
   height: 100%;
   width: 100%;
@@ -121,11 +119,13 @@ export default class NavBar extends Vue {
   border: none;
   height: 30px;
   background: none;
+  cursor: pointer;
 }
 
 #profile{
   display: flex;
   align-items: center;
   font-size: 75%;
+  font-family: Brandon Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
 }
 </style>

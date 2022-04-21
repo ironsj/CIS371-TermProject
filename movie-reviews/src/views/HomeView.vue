@@ -4,11 +4,11 @@
     <div class="movieLists">
       <div id="top">
         <h2>Trending Movies</h2>
-        <BasicMovieInfo v-for="(m, pos) in trendingMovies" :key="pos" :title="m.title" :release_date="m.release_date" :poster_path="m.poster_path"></BasicMovieInfo>
+        <BasicMovieInfo v-for="(m, pos) in trendingMovies" :key="pos" :title="m.title" :release_date="m.release_date" :poster_path="m.poster_path" @movie-clicked="reviewMovie(m.id)"></BasicMovieInfo>
       </div>
       <div id="out">
         <h2>In Theaters</h2>
-        <BasicMovieInfo v-for="(m, pos) in outNow" :key="pos" :title="m.title" :release_date="m.release_date" :poster_path="m.poster_path"></BasicMovieInfo>
+        <BasicMovieInfo v-for="(m, pos) in outNow" :key="pos" :title="m.title" :release_date="m.release_date" :poster_path="m.poster_path" @movie-clicked="reviewMovie(m.id)" ></BasicMovieInfo>
       </div>
     </div>
   </div>
@@ -56,7 +56,7 @@ export default class HomeView extends Vue {
       for(let i = 0; i < r.results.length; i++){
         const m = r.results[i];
         this.trendingMovies
-    .push({poster_path: m.poster_path, title: m.title, release_date: m.release_date})
+    .push({poster_path: m.poster_path, title: m.title, release_date: m.release_date, id: m.id})
       }
     })
   }
@@ -77,9 +77,23 @@ export default class HomeView extends Vue {
     .then((r: any) => {
       for(let i = 0; i < r.results.length; i++){
         const m = r.results[i];
-        this.outNow.push({poster_path: m.poster_path, title: m.title, release_date: m.release_date})
+        this.outNow.push({poster_path: m.poster_path, title: m.title, release_date: m.release_date, id: m.id})
       }
     })
+  }
+  
+  foo():void{
+    console.log("test");
+  }
+
+  reviewMovie(nextId: string): void{
+    console.log("test")
+    this.$router.push({
+      name: 'review',
+      params:{
+        id: nextId
+      }
+    });
   }
 
 }
@@ -93,6 +107,16 @@ export default class HomeView extends Vue {
 
 h2{
   font-family: Brandon Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+}
+
+#top{
+  padding: 10px;
+  padding-top: 20px;
+}
+
+#out{
+  padding: 10px;
+  padding-top: 20px;
 }
 
 </style>
