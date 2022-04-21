@@ -1,8 +1,8 @@
 <template>
   <div class="nav-bar">
     <form class="search-container">
-      <input id="search-bar" type="text" placeholder="Search for Movie"/>
-      <button id="search-button" type="submit">Search</button>
+      <input id="search-bar" type="text" placeholder="Search for Movie" v-model="searched"/>
+      <button id="search-button" type="submit" @click="searchMovie">Search</button>
     </form>
     <h1 id="title">Movie Review WebApp Thing</h1>
     <button type="hidden"></button>
@@ -15,6 +15,15 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 @Component
 export default class NavBar extends Vue {
   @Prop() private msg!: string;
+  searched = "";
+
+  searchMovie(): void {
+    this.$router.push({
+      name: 'movie',
+      params: {
+        search: this.searched
+      }});
+  }
 }
 </script>
 
