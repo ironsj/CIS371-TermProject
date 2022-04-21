@@ -59,9 +59,9 @@ export default class MovieView extends Vue {
         })
         .then((r: any) => JSON.parse(r.contents))
      .then((r: any) => {
-         console.log(r.results)
       for(let i = 0; i < r.results.length; i++){
         const m = r.results[i];
+        console.log(m.title);
         this.movie.push({title: m.title, release_date: m.release_date, id: m.id, poster_path: m.poster_path})
       }
     })
