@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import MovieView from '../views/MovieView.vue'
+import ReviewView from '../views/ReviewView.vue'
 
 Vue.use(VueRouter)
 
@@ -19,10 +21,23 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
+    path: "/movie/:search",
+    name: 'movie',
+    component: MovieView, props:true 
+  },
+
+  {
+    path: "/review/:id",
+    name: 'review',
+    component: ReviewView, props:true 
+  },
+  
+  {
     path: '/login',
     name: 'login',
     component: () => import('../views/LoginView.vue')
   }
+
 ]
 
 const router = new VueRouter({

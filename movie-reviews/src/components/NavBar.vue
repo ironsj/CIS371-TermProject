@@ -1,8 +1,8 @@
 <template>
   <div class="nav-bar">
     <form class="search-container">
-      <input id="search-bar" type="text" placeholder="Search for Movie"/>
-      <button id="search-button" type="submit"><img :src="require('../assets/search.png')"></button>
+      <input id="search-bar" type="text" placeholder="Search for Movie" v-model="searched"/>
+      <button id="search-button" type="submit" @click="searchMovie"><img :src="require('../assets/search.png')"></button>
     </form>
     <h1 id="title">Movie Review WebApp Thing</h1>
     <button v-if="!signedIn" @click="login">Login/Register</button>
@@ -29,6 +29,8 @@ import {
 
 @Component
 export default class NavBar extends Vue {
+  @Prop() private msg!: string;
+  searched = "";
   userPhotoURL = "";
   auth: Auth | null = null;
   userInfo = "";
@@ -62,6 +64,13 @@ export default class NavBar extends Vue {
     } 
 
   }
+  searchMovie(): void {
+    this.$router.push({
+      name: 'movie',
+      params: {
+        search: this.searched
+      }});
+}
 }
 </script>
 
