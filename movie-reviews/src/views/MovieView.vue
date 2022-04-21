@@ -81,9 +81,11 @@ export default class MovieView extends Vue {
 td {
     padding: 0 15px;
     border: 3px solid;
+    background: white;
 }
 th {
     font-weight: bold;
+    background: white;
 }
 
 </style>
