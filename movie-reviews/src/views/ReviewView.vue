@@ -107,5 +107,8 @@ input {
     line-height: 100%;
     background: white;
 }
+.movie {
+    color: black;
+}
 
 </style>

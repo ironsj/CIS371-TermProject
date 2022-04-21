@@ -87,5 +87,8 @@ th {
     font-weight: bold;
     background: white;
 }
+.movie{
+    color: black;
+}
 
 </style>

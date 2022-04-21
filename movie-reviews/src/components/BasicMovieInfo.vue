@@ -1,5 +1,5 @@
 <template>
-  <div id="movie">
+  <div id="movie" @click="changeView">
     <img :src="image_url">
     <div id="info">
         <p>{{title}}</p>
@@ -21,8 +21,13 @@ export default class BasicMovieInfo extends Vue {
 
   mounted():void{
       this.image_url = `https://image.tmdb.org/t/p/w154${this.poster_path}`;
-      console.log(this.title);
   }
+
+  changeView():void{
+    this.$emit('movie-clicked');
+  }
+
+  
 
 
 }
