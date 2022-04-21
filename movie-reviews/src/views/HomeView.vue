@@ -95,4 +95,14 @@ h2{
   font-family: Brandon Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
 }
 
+#top{
+  padding: 10px;
+  padding-top: 20px;
+}
+
+#out{
+  padding: 10px;
+  padding-top: 20px;
+}
+
 </style>

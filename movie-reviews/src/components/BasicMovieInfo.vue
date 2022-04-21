@@ -40,6 +40,7 @@ export default class BasicMovieInfo extends Vue {
 }
 #movie:hover {
   transform: scale(1.05);
+  cursor: pointer;
 }
 
 #movie div{
