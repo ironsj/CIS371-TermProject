@@ -2,13 +2,15 @@
   <div class="nav-bar">
     <form class="search-container">
       <input id="search-bar" type="text" placeholder="Search for Movie"/>
-      <button id="search-button" type="submit">Search</button>
+      <button id="search-button" type="submit"><img :src="require('../assets/search.png')"></button>
     </form>
     <h1 id="title">Movie Review WebApp Thing</h1>
     <button v-if="!signedIn" @click="login">Login/Register</button>
-    <div v-else>
-      <img :src="userPhotoURL" v-if="userPhotoURL.length > 0" width="32">
-      <p>Welcome {{userInfo}}!</p>
+    <div id="profile" v-else>
+      <div>
+        <img :src="userPhotoURL" v-if="userPhotoURL.length > 0" width="32">
+        <p>Welcome {{userInfo}}!</p>
+      </div>
       <button @click="logout">Log Out</button>
     </div>
   </div>
@@ -27,12 +29,12 @@ import {
 
 @Component
 export default class NavBar extends Vue {
-  @Prop() private msg!: string;
   userPhotoURL = "";
   auth: Auth | null = null;
   userInfo = "";
   user: User | null = null;
   signedIn = false;
+  source = '../assets/search.jpg'
 
   mounted(): void{
     this.auth = getAuth();
@@ -66,10 +68,12 @@ export default class NavBar extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .nav-bar{
-  background-color: black;
+  background-color: rgb(18, 18, 18);
   display:flex;
   flex-direction:row;
   justify-content: space-between;
+  align-items: center;
+  padding:10px;
 }
 
 .nav-bar h1{
@@ -79,30 +83,38 @@ export default class NavBar extends Vue {
 .search-container {
   display:flex;
   flex-direction:row;
-  
-  /* This bit draws the box around it */
-  border:1px solid grey;
-
-  /* I've used padding so you can see the edges of the elements. */
-  padding:2px;
-
-  
+  align-items: center;
+  background-color: white;
+  border-radius: 0.25rem;
 }
 
 #search-bar {
   /* Tell the input to use all the available space */
   /* And hide the input's outline, so the form looks like the outline */
-  border:none;
+  border:0;
+  height: 100%;
+  width: 100%;
+  height: 30px;
+  outline:0;
+  background: none;
 }
 
-#search-bar :focus{
-  outline:none
+
+.search-container img{
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
 }
 
 #search-button {
-  /* Just a little styling to make it pretty */
-  border:1px white;
-  background:white;
-  color:black;
+  border: none;
+  height: 30px;
+  background: none;
+}
+
+#profile{
+  display: flex;
+  align-items: center;
+  font-size: 75%;
 }
 </style>
