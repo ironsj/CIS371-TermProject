@@ -3,11 +3,11 @@
     <NavBar/>
     <div class="movieLists">
       <div id="top">
-        <h1>Trending Movies</h1>
+        <h2>Trending Movies</h2>
         <BasicMovieInfo v-for="(m, pos) in trendingMovies" :key="pos" :title="m.title" :release_date="m.release_date" :poster_path="m.poster_path"></BasicMovieInfo>
       </div>
       <div id="out">
-        <h1>In Theaters</h1>
+        <h2>In Theaters</h2>
         <BasicMovieInfo v-for="(m, pos) in outNow" :key="pos" :title="m.title" :release_date="m.release_date" :poster_path="m.poster_path"></BasicMovieInfo>
       </div>
     </div>
@@ -89,6 +89,10 @@ export default class HomeView extends Vue {
 .movieLists{
   left: 1%;
   right: 1%;
+}
+
+h2{
+  font-family: Brandon Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
 }
 
 </style>

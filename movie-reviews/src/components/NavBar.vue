@@ -74,10 +74,12 @@ export default class NavBar extends Vue {
   justify-content: space-between;
   align-items: center;
   padding:10px;
+  color: white;
 }
 
 .nav-bar h1{
   color: wheat;
+  font-family: Brandon Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
 }
 
 .search-container {
