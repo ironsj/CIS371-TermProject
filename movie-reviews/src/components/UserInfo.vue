@@ -1,6 +1,6 @@
 <template>
 	<div class="userInfo">
-		<p>Name: Henry Hank</p>
+		<p>Name: {{ name }}</p>
 		<input type="text" :value="newName" />
 		<button @click="editName">Edit Name</button>
 		<img
@@ -9,12 +9,12 @@
 			v-if="myPhotoUrl.length > 0"
 			width="256"
 		/>
-		<p>User Name: Henry1234</p>
+		<p>User Name: {{ userName }}</p>
 		<input type="text" :value="newScreenName" />
 		<button @click="editScreenName">Edit Screen Name</button>
-		<p>DOB: 3/7/1990</p>
+		<p>DOB: {{ DOB }}</p>
 		<input type="date" :value="newDOB" />
-		<button @click="editDOB">Edit Name</button>
+		<button @click="editDOB">Edit DOB</button>
 		<p>Movies Reviewed: (Get Movie List from Firestore)</p>
 		<p>Average Movie Rating Given: 0.0</p>
 		<p>Highest rated Movie by You: (insert movie here)</p>
@@ -39,12 +39,12 @@ import {
 } from "firebase/firestore";
 import { initializeApp, FirebaseApp } from "firebase/app";
 import {
-  getAuth,
-  onAuthStateChanged,
-  User,
-  Auth,
-  signOut,
-  deleteUser,
+	getAuth,
+	onAuthStateChanged,
+	User,
+	Auth,
+	signOut,
+	deleteUser,
 } from "firebase/auth";
 
 const app: FirebaseApp = initializeApp(firebaseConfig);
@@ -79,9 +79,9 @@ export default class UserInfo extends Vue {
 		onAuthStateChanged(this.auth, async (user: User | null) => {
 			if (user) {
 				const uid = user.uid;
-				console.log(uid)
+				console.log(uid);
 				this.myPhotoUrl = user?.photoURL ?? "";
-				console.log(this.myPhotoUrl)
+				console.log(this.myPhotoUrl);
 				const userDoc = doc(db, "users", `${uid}`);
 				const userSnap = await getDoc(userDoc);
 				if (userSnap.exists()) {
@@ -95,7 +95,6 @@ export default class UserInfo extends Vue {
 				}
 			}
 		});
-		
 	}
 
 	editName(): void {

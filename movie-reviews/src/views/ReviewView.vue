@@ -43,21 +43,19 @@
     </div>
 </template>
 
-
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import NavBar from '@/components/NavBar.vue';
-import Review from '@/components/Review.vue'
+import { Component, Prop, Vue } from "vue-property-decorator";
+import NavBar from "@/components/NavBar.vue";
 import axios, { Axios, AxiosResponse } from "axios";
-import { movieData, movies } from '@/datatype';
+import { movieData, movies } from "@/datatype";
 import { initializeApp } from "firebase/app";
 import {
-  getAuth,
-  onAuthStateChanged,
-  User,
-  Auth,
-  signOut,
-  deleteUser,
+	getAuth,
+	onAuthStateChanged,
+	User,
+	Auth,
+	signOut,
+	deleteUser,
 } from "firebase/auth";
 import { firebaseConfig } from "@/myconfig";
 import {
@@ -76,12 +74,10 @@ type publishedReviews = {
     name: string;
 };
 @Component({
-    components: {
-        NavBar,
-        Review
-    },
+	components: {
+		NavBar,
+	},
 })
-
 export default class MovieView extends Vue {
     @Prop() readonly id!: string;
     apiKey = "";
@@ -183,65 +179,38 @@ export default class MovieView extends Vue {
         setDoc(locDoc, docData);
     }
 }
-
 </script>
-
 
 <style scoped>
 td {
-    padding: 3px 10px;
-    border: 3px solid;
-    background: white;
+	padding: 3px 10px;
+	border: 3px solid;
+	background: white;
 }
 th {
-    font-weight: bold;
-    padding: 3px 15px;
-    border: 3px solid;
-    background: white;
+	font-weight: bold;
+	padding: 3px 15px;
+	border: 3px solid;
+	background: white;
 }
 table {
-    width: 50%;
-    font-size: 15pt;
-    background: black;
-    background-color: black;
-}
-tr{
-    background-color: black;
-}
-td{
-    background-color: black;
-}
-th{
-    background-color: black;
+	width: 50%;
+	font-size: 15pt;
 }
 
 label {
-    font-size: 20pt;
-    background: white;
-    border:3px solid;
+	font-size: 20pt;
+	background: white;
+	border: 3px solid;
 }
 input {
-    padding: 10px 10px;
-    width: 49%;
-    border: 3px solid;
-    line-height: 100%;
-    background: white;
+	padding: 10px 10px;
+	width: 49%;
+	border: 3px solid;
+	line-height: 100%;
+	background: white;
 }
 .movie {
-    color: black;
+	color: black;
 }
-.movieInfo{
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-}
-textarea{
-    width:50%;
-    height:20%;
-}
-ul{
-    list-style-type: none;
-}
-
 </style>
