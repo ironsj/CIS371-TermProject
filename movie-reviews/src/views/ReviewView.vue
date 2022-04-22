@@ -46,6 +46,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import NavBar from "@/components/NavBar.vue";
+import Review from "@/components/Review.vue"
 import axios, { Axios, AxiosResponse } from "axios";
 import { movieData, movies } from "@/datatype";
 import { initializeApp } from "firebase/app";
@@ -76,6 +77,7 @@ type publishedReviews = {
 @Component({
 	components: {
 		NavBar,
+        Review,
 	},
 })
 export default class MovieView extends Vue {
@@ -118,21 +120,6 @@ export default class MovieView extends Vue {
             this.getReviews();
         })
     }
-    
-    // getReviews(): void {
-    //     const app = initializeApp(firebaseConfig);
-    //     const db = getFirestore(app);
-    //     if(this.totalReviews.length > 0){
-    //     const movieCollection:CollectionReference = collection(db, "Movies", this.currentTitle, "Reviews");
-    //     getDocs(movieCollection)
-    //     .then((myQueryRes: QuerySnapshot) => {
-    //         myQueryRes.forEach((myDoc: QueryDocumentSnapshot)=> {
-    //         this.totalReviews.push({userId: myDoc.id, userData: myDoc.data().newData})
-    //         console.log(this.totalReviews);
-    //         })
-    //     })
-    // }
-   // }
 
     getReviews(): void{
         const app = initializeApp(firebaseConfig);
@@ -194,10 +181,22 @@ th {
 	background: white;
 }
 table {
+    width: 50%;
+    font-size: 15pt;
+    background: black;
+    background-color: black;
+}
+tr{
+    background-color: black;
+}
+td{
+    background-color: black;
+}
+th{
+    background-color: black;
 	width: 50%;
 	font-size: 15pt;
 }
-
 label {
 	font-size: 20pt;
 	background: white;
@@ -211,6 +210,17 @@ input {
 	background: white;
 }
 .movie {
+	color: black;
+}
+.movieInfo{
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+textarea{
+    width:50%;
+    height:20%;
 	color: black;
 }
 </style>
