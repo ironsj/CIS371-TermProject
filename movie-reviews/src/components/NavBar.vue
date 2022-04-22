@@ -1,18 +1,20 @@
 <template>
   <div class="nav-bar">
-    <Burger @toggle-menu="menuActive = !menuActive" :active="menuActive"/>
-    <nav v-show="menuActive">
-			<router-link to="/">Home</router-link> |
-			<router-link to="/user">Profile</router-link>
-		</nav>
-    <form class="search-container">
-      <input id="search-bar" type="text" placeholder="Search for Movie" v-model="searched"/>
-      <button id="search-button" type="submit" @click="searchMovie"><img :src="require('../assets/search.png')"></button>
-    </form>
+    <div class="search_nav">
+      <Burger @toggle-menu="menuActive = !menuActive" :active="menuActive"/>
+      <nav v-show="menuActive">
+        <router-link to="/">Home</router-link> |
+        <router-link to="/user" v-if="user">Profile</router-link>
+      </nav>
+      <form class="search-container">
+        <input id="search-bar" type="text" placeholder="Search for Movie" v-model="searched"/>
+        <button id="search-button" type="submit" @click="searchMovie"><img :src="require('../assets/search.png')"></button>
+      </form>
+    </div>
     <h1 id="title">Movie Review WebApp Thing</h1>
     <button v-if="!signedIn" @click="login">Login/Register</button>
-    <div @click="goToProfilePage" id="profile" v-else>
-      <div>
+    <div id="profile" v-else>
+      <div @click="goToProfilePage">
         <img :src="userPhotoURL" v-if="userPhotoURL.length > 0" width="32">
         <p>Welcome {{userInfo}}!</p>
       </div>
@@ -70,10 +72,12 @@ export default class NavBar extends Vue {
 
   logout():void{
     if (this.auth){
-      signOut(this.auth);
+      signOut(this.auth).then(() =>{
+        this.$router.replace({ path: "/"}).catch(()=>{console.log("home")});
+      }
+      );
       this.signedIn = false;
     } 
-
   }
   searchMovie(): void {
     this.$router.push({
@@ -113,6 +117,7 @@ export default class NavBar extends Vue {
   align-items: center;
   background-color: white;
   border-radius: 0.25rem;
+  padding-left: 3px;
 }
 
 #search-bar {
@@ -156,5 +161,10 @@ nav a.router-link-exact-active {
 
 #profile{
   cursor: pointer;
+}
+
+.search_nav{
+  display: flex;
+  gap: 10px;
 }
 </style>

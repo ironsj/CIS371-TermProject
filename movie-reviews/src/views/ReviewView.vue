@@ -2,44 +2,44 @@
     <div class="movie">
         <NavBar/>
         <center>
-        <br>
-        <div class="movieInfo">
-            <img :src="image_url"/>
-            <table>
-                <tr>
-                    <!---<th>Movie Poster</th>--->
-                    <th>Movie Title</th>
-                    <th>Release Date</th>
-                    <th>Movie Summary</th>
-                </tr>
-                <tr>
-                    <tr v-for="(u,pos) in this.reviews" :key="pos">
-                    <td>{{u.title}}</td>
-                    <td>{{u.release_date}}</td>
-                    <td>{{u.overview}}</td>
-                </tr>
-            </table>
-        </div>
-        <br>
-        <form>
-            <label for="review">Leave a Review:</label><br>
-            <textarea rows="10" name="review" v-model="newReview"></textarea><br>
             <br>
-            <button type="button" @click="reviewMovie">Post</button><button type="button" @click="deleteReview">Delete Review</button>
-        </form>
-        <br>
-        <table>
-            <tr>
-                <th>UserID</th>
-                <th>Movie Review</th>
-            </tr>
-            <tr v-for="(u,pos) in this.totalReviews" :key="pos">
-                <td>{{u.userId}}</td>
-                <td>{{u.userData}}</td>
-            </tr>
-        </table>
+            <div class="movieInfo">
+                <img :src="image_url"/>
+                <table>
+                    <tr>
+                        <!---<th>Movie Poster</th>--->
+                        <th>Movie Title</th>
+                        <th>Release Date</th>
+                        <th>Movie Summary</th>
+                    </tr>
+                    <tr>
+                        <tr v-for="(u,pos) in this.reviews" :key="pos">
+                        <td>{{u.title}}</td>
+                        <td>{{u.release_date}}</td>
+                        <td>{{u.overview}}</td>
+                    </tr>
+                </table>
+            </div>
+            <br>
+            <form>
+                <label for="review">Leave a Review:</label><br>
+                <textarea rows="10" name="review" v-model="newReview"></textarea><br>
+                <br>
+                <button type="button" @click="reviewMovie">Post</button><button type="button" @click="deleteReview">Delete Review</button>
+            </form>
         </center>
-        <Review :title="currentTitle" v-if="currentTitle"/>
+        <template v-if="currentTitle">
+            <Review
+                v-for="(r, pos) in totalReviews"
+                :key="pos"
+                :title="currentTitle" 
+                :date="r.date"
+                :profilePic="r.profilePic"
+                :review="r.review"
+                :name="r.name"
+            ></Review>
+        </template>
+        <p v-else>F</p>
     </div>
 </template>
 
@@ -65,12 +65,15 @@ import {
         doc, getDoc,  updateDoc,
         getFirestore, setDoc,  
         CollectionReference, getDocs,
-        collection,deleteDoc, Timestamp,
+        collection,deleteDoc, Timestamp, QuerySnapshot, QueryDocumentSnapshot,
       } from "firebase/firestore";
 
 type publishedReviews = {
-        userId: string;
-        userData: string;
+    title: string;
+    date: string;
+    profilePic: string;
+    review: string;
+    name: string;
 };
 @Component({
     components: {
@@ -88,13 +91,12 @@ export default class MovieView extends Vue {
     currentTitle="";
     poster_path="";
     image_url = "";
-
+    userPhotoURL = "";
 
 
     mounted(): void {
         this.apiKey = process.env.VUE_APP_MOVIE_DB_API_KEY;
         this.getDetails();
-       // this.getReviews();
     }
 
     getDetails(): void{
@@ -116,6 +118,9 @@ export default class MovieView extends Vue {
             this.image_url = `https://image.tmdb.org/t/p/w500${this.poster_path}`
             this.reviews.push({title: r.title, release_date: r.release_date, id: r.id, poster_path: r.poster_path, overview: r.overview})
         })
+        .finally(() => {
+            this.getReviews();
+        })
     }
     
     // getReviews(): void {
@@ -132,6 +137,25 @@ export default class MovieView extends Vue {
     //     })
     // }
    // }
+
+    getReviews(): void{
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const reviews = collection(db, "Movies", this.currentTitle, "Reviews");
+            getDocs(reviews).then((reviewQuery: QuerySnapshot) => {
+                reviewQuery.forEach((movieReview:QueryDocumentSnapshot) => {
+                    const revData = movieReview.data();
+                    console.log(revData.newData);
+                    this.totalReviews.push({
+                        title: this.currentTitle,
+                        date: new Date(revData.date.seconds * 1000 + revData.date.nanoseconds / 1000000).toLocaleString(),
+                        profilePic: revData.profilePhoto ?? "",
+                        review: revData.newData,
+                        name: revData.userName
+                    })
+            });
+        });
+    }
 
     deleteReview(): void{
         const app = initializeApp(firebaseConfig);
@@ -152,7 +176,8 @@ export default class MovieView extends Vue {
         const docData = {
             newData: this.newReview,
             userName: user!.displayName,
-            date: Timestamp.now()
+            date: Timestamp.now(),
+            profilePhoto: user!.photoURL ?? "",
         }
         this.newReview ="";
         setDoc(locDoc, docData);
