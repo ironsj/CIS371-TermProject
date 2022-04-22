@@ -1,5 +1,7 @@
 <template>
   <div class="nav-bar">
+    <Burger @toggle-menu="menuActive = !menuActive" :active="menuActive"/>
+    <p v-show="menuActive"></p>
     <form class="search-container">
       <input id="search-bar" type="text" placeholder="Search for Movie" v-model="searched"/>
       <button id="search-button" type="submit" @click="searchMovie"><img :src="require('../assets/search.png')"></button>
@@ -18,6 +20,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import Burger from '@/components/HamburgerMenu.vue'
 import {
   getAuth,
   onAuthStateChanged,
@@ -26,12 +29,17 @@ import {
   signOut,
   deleteUser,
 } from "firebase/auth";
+import { component } from 'vue/types/umd';
 
-@Component
+@Component({
+  components:{
+    Burger
+  },
+})
 export default class NavBar extends Vue {
-  @Prop() private msg!: string;
   searched = "";
   userPhotoURL = "";
+  menuActive = false;
   auth: Auth | null = null;
   userInfo = "";
   user: User | null = null;

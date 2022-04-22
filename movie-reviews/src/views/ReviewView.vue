@@ -8,14 +8,12 @@
                 <!---<th>Movie Poster</th>--->
                 <th>Movie Title</th>
                 <th>Release Date</th>
-                <th>Movie ID</th>
                 <th>Movie Summary</th>
             </tr>
             <tr>
                 <tr v-for="(u,pos) in this.reviews" :key="pos">
                 <td>{{u.title}}</td>
                 <td>{{u.release_date}}</td>
-                <td>{{u.id}}</td>
                 <td>{{u.overview}}</td>
             </tr>
        </table>

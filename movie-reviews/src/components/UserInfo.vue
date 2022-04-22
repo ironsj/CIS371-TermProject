@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { firebaseConfig } from "../../myconfig";
+import { firebaseConfig } from "@/myconfig";
 import { Component, Vue } from "vue-property-decorator";
 import {
 	getFirestore,

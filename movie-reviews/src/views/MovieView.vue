@@ -7,13 +7,11 @@
                 <!---<th>Movie Poster</th>--->
                 <th>Movie Title</th>
                 <th>Release Date</th>
-                <th>Movie ID</th>
             </tr>
-            <tr v-for="(u,pos) in movie" :key="pos">
+            <tr v-for="(u,pos) in movie" :key="pos" @click="changeView(u.id)" id="movieResult">
                 <!---<td><img :src="u.poster_path"></td>--->
                 <td>{{u.title}}</td>
                 <td>{{u.release_date}}</td>
-                <td @click="changeView(u.id)">{{u.id}}</td>
             </tr>
         </table>
         
@@ -89,6 +87,10 @@ th {
 }
 .movie{
     color: black;
+}
+
+#movieResult{
+    cursor: pointer;
 }
 
 </style>
