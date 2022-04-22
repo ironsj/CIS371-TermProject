@@ -22,7 +22,7 @@
            <label for="review">Review Movie:</label><br>
             <input type="text" v-model="newReview"><br>
             <br>
-            <button type="button" @click="reviewMovie">Review Movie</button>
+            <button type="button" @click="reviewMovie">Review Movie</button><button type="button" @click="deleteReview">Delete Review</button>
         </form>
         <br>
         <table>
@@ -60,7 +60,7 @@ import {
         doc, getDoc,  updateDoc,
         getFirestore, setDoc,  
         CollectionReference, getDocs,
-        collection,
+        collection,deleteDoc,
       } from "firebase/firestore";
 
 type publishedReviews = {
@@ -123,6 +123,14 @@ export default class MovieView extends Vue {
     // }
    // }
 
+    deleteReview(): void{
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth();
+        const uid = auth.currentUser!.uid;
+        const delDoc:DocumentReference = doc(db, "Movies", this.currentTitle, "Reviews", uid);
+        deleteDoc(delDoc);
+    }
     reviewMovie(): void {
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
