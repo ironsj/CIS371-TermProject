@@ -84,11 +84,7 @@ export default class NavBar extends Vue {
   }
 
   goToProfilePage():void{
-    if (this.$route.path != '/user') {
-      this.$router.push({
-        path: 'user',
-      })
-    }
+    this.$router.replace({ name: "user"}).catch(()=>{console.log("profile")});
     console.log("Already there!") 
   }
 }

@@ -23,7 +23,7 @@
         <br>
         <form>
             <label for="review">Leave a Review:</label><br>
-            <textarea name="review" v-model="newReview"></textarea><br>
+            <textarea rows="10" name="review" v-model="newReview"></textarea><br>
             <br>
             <button type="button" @click="reviewMovie">Post</button><button type="button" @click="deleteReview">Delete Review</button>
         </form>
@@ -208,7 +208,8 @@ input {
     align-content: center;
 }
 textarea{
-    width:50%
+    width:50%;
+    height:20%;
 }
 ul{
     list-style-type: none;
