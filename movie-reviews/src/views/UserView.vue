@@ -1,26 +1,20 @@
 <template>
 	<div class="home">
-		<h1>{{ userName }}</h1>
-		<img
-			alt="Your Photo"
-			:src="myPhotoURL"
-			v-if="myPhotoURL.length > 0"
-			width="256"
-		/>
+		<NavBar />
 		<UserInfo />
 	</div>
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import UserInfo from "@/components/UserInfo.vue"; // @ is an alias to /src
+import NavBar from "@/components/NavBar.vue";
 
 @Component({
 	components: {
 		UserInfo,
+		NavBar,
 	},
 })
-export default class HomeView extends Vue {
-	@Prop() private userName!: String;
-}
+export default class HomeView extends Vue {}
 </script>

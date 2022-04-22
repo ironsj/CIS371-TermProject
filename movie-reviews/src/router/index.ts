@@ -1,7 +1,9 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import UserView from "../Views/UserView.vue";
+import MovieView from "../views/MovieView.vue";
+import ReviewView from "../views/ReviewView.vue";
+import UserView from "../views/UserView.vue";
 
 Vue.use(VueRouter);
 
@@ -21,9 +23,30 @@ const routes: Array<RouteConfig> = [
 			import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
 	},
 	{
+		path: "/movie/:search",
+		name: "movie",
+		component: MovieView,
+		props: true,
+	},
+
+	{
+		path: "/review/:id",
+		name: "review",
+		component: ReviewView,
+		props: true,
+	},
+
+	{
+		path: "/login",
+		name: "login",
+		component: () => import("../views/LoginView.vue"),
+	},
+
+	{
 		path: "/user",
 		name: "user",
 		component: UserView,
+		props: true,
 	},
 ];
 
