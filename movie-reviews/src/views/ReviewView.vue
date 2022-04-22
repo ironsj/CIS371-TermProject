@@ -2,27 +2,30 @@
     <div class="movie">
         <NavBar/>
         <center>
+        <br>
+        <div class="movieInfo">
+            <img :src="image_url"/>
+            <table>
+                <tr>
+                    <!---<th>Movie Poster</th>--->
+                    <th>Movie Title</th>
+                    <th>Release Date</th>
+                    <th>Movie Summary</th>
+                </tr>
+                <tr>
+                    <tr v-for="(u,pos) in this.reviews" :key="pos">
+                    <td>{{u.title}}</td>
+                    <td>{{u.release_date}}</td>
+                    <td>{{u.overview}}</td>
+                </tr>
+            </table>
+        </div>
+        <br>
+        <form>
+            <label for="review">Leave a Review:</label><br>
+            <textarea name="review" v-model="newReview"></textarea><br>
             <br>
-       <table>
-            <tr>
-                <!---<th>Movie Poster</th>--->
-                <th>Movie Title</th>
-                <th>Release Date</th>
-                <th>Movie Summary</th>
-            </tr>
-            <tr>
-                <tr v-for="(u,pos) in this.reviews" :key="pos">
-                <td>{{u.title}}</td>
-                <td>{{u.release_date}}</td>
-                <td>{{u.overview}}</td>
-            </tr>
-       </table>
-       <br>
-       <form>
-           <label for="review">Review Movie:</label><br>
-            <input type="text" v-model="newReview"><br>
-            <br>
-            <button type="button" @click="reviewMovie">Review Movie</button>
+            <button type="button" @click="reviewMovie">Post</button>
         </form>
         <br>
         <table>
@@ -80,6 +83,8 @@ export default class MovieView extends Vue {
     totalReviews: Array<publishedReviews> = [];
     newReview ="";
     currentTitle="";
+    poster_path="";
+    image_url = "";
 
 
 
@@ -94,18 +99,20 @@ export default class MovieView extends Vue {
           axios.request({
             method: "GET",
             url: "https://api.allorigins.win/get",
-        params: {
+            params: {
              url: searchurl,
-        },
+            },
         })
         .then((r: AxiosResponse) => {
-      return r.data;
+            return r.data;
         })
         .then((r: any) => JSON.parse(r.contents))
         .then((r: any) => {
             this.currentTitle=r.title;
-        this.reviews.push({title: r.title, release_date: r.release_date, id: r.id, poster_path: r.poster_path, overview: r.overview})
-    })
+            this.poster_path = r.poster_path;
+            this.image_url = `https://image.tmdb.org/t/p/w500${this.poster_path}`
+            this.reviews.push({title: r.title, release_date: r.release_date, id: r.id, poster_path: r.poster_path, overview: r.overview})
+        })
     }
     
     // getReviews(): void {
@@ -158,7 +165,17 @@ th {
 table {
     width: 50%;
     font-size: 15pt;
-    
+    background: black;
+    background-color: black;
+}
+tr{
+    background-color: black;
+}
+td{
+    background-color: black;
+}
+th{
+    background-color: black;
 }
 
 label {
@@ -175,6 +192,18 @@ input {
 }
 .movie {
     color: black;
+}
+.movieInfo{
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+textarea{
+    width:50%
+}
+ul{
+    list-style-type: none;
 }
 
 </style>
