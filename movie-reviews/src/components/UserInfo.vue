@@ -1,7 +1,7 @@
 <template>
 	<div class="userInfo">
 		<p>Name: {{ name }}</p>
-		<input type="text" :value="newName" />
+		<input type="text" v-model="newName" />
 		<button @click="editName">Edit Name</button>
 		<img
 			alt="Your Photo"
@@ -9,11 +9,11 @@
 			v-if="myPhotoUrl.length > 0"
 			width="256"
 		/>
-		<p>User Name: {{ userName }}</p>
-		<input type="text" :value="newScreenName" />
+		<p>User Name: {{ screenName }}</p>
+		<input type="text" v-model="newScreenName" />
 		<button @click="editScreenName">Edit Screen Name</button>
-		<p>DOB: {{ DOB }}</p>
-		<input type="date" :value="newDOB" />
+		<p>DOB: {{ dob }}</p>
+		<input type="date" v-model="newDOB" />
 		<button @click="editDOB">Edit DOB</button>
 		<p>Movies Reviewed: (Get Movie List from Firestore)</p>
 		<p>Average Movie Rating Given: 0.0</p>
@@ -98,6 +98,7 @@ export default class UserInfo extends Vue {
 	}
 
 	editName(): void {
+		console.log(this.newName);
 		const auth = getAuth();
 		if (auth != null) {
 			if (auth.currentUser != null) {
@@ -105,6 +106,7 @@ export default class UserInfo extends Vue {
 				const c: CollectionReference = collection(db, "users");
 				const d: DocumentReference = doc(c, uid);
 				updateDoc(d, { name: this.newName });
+				this.name = this.newName;
 			}
 		}
 	}
@@ -117,6 +119,7 @@ export default class UserInfo extends Vue {
 				const c: CollectionReference = collection(db, "users");
 				const d: DocumentReference = doc(c, uid);
 				updateDoc(d, { screenName: this.newScreenName });
+				this.screenName = this.newScreenName
 			}
 		}
 	}
@@ -129,6 +132,7 @@ export default class UserInfo extends Vue {
 				const c: CollectionReference = collection(db, "users");
 				const d: DocumentReference = doc(c, uid);
 				updateDoc(d, { DOB: this.newDOB });
+				this.dob = this.newDOB
 			}
 		}
 	}
