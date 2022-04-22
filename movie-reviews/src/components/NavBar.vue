@@ -1,14 +1,17 @@
 <template>
   <div class="nav-bar">
     <Burger @toggle-menu="menuActive = !menuActive" :active="menuActive"/>
-    <p v-show="menuActive"></p>
+    <nav v-show="menuActive">
+			<router-link to="/">Home</router-link> |
+			<router-link to="/user">Profile</router-link>
+		</nav>
     <form class="search-container">
       <input id="search-bar" type="text" placeholder="Search for Movie" v-model="searched"/>
       <button id="search-button" type="submit" @click="searchMovie"><img :src="require('../assets/search.png')"></button>
     </form>
     <h1 id="title">Movie Review WebApp Thing</h1>
     <button v-if="!signedIn" @click="login">Login/Register</button>
-    <div id="profile" v-else>
+    <div @click="goToProfilePage" id="profile" v-else>
       <div>
         <img :src="userPhotoURL" v-if="userPhotoURL.length > 0" width="32">
         <p>Welcome {{userInfo}}!</p>
@@ -78,7 +81,16 @@ export default class NavBar extends Vue {
       params: {
         search: this.searched
       }});
-}
+  }
+
+  goToProfilePage():void{
+    if (this.$route.path != '/user') {
+      this.$router.push({
+        path: 'user',
+      })
+    }
+    console.log("Already there!") 
+  }
 }
 </script>
 
@@ -135,5 +147,18 @@ export default class NavBar extends Vue {
   align-items: center;
   font-size: 75%;
   font-family: Brandon Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+}
+
+nav a {
+	font-weight: bold;
+	color: #2c3e50;
+}
+
+nav a.router-link-exact-active {
+	color: #42b983;
+}
+
+#profile{
+  cursor: pointer;
 }
 </style>

@@ -2,11 +2,11 @@
 	<div class="userInfo">
 		<p>Name: Henry Hank</p>
 		<input type="text" :value="newName" />
-		<button @click="editname">Edit Name</button>
+		<button @click="editName">Edit Name</button>
 		<img
 			alt="Your Photo"
-			:src="myPhotoURL"
-			v-if="myPhotoURL.length > 0"
+			:src="myPhotoUrl"
+			v-if="myPhotoUrl.length > 0"
 			width="256"
 		/>
 		<p>User Name: Henry1234</p>
@@ -38,7 +38,14 @@ import {
 	collection,
 } from "firebase/firestore";
 import { initializeApp, FirebaseApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  User,
+  Auth,
+  signOut,
+  deleteUser,
+} from "firebase/auth";
 
 const app: FirebaseApp = initializeApp(firebaseConfig);
 const db: Firestore = getFirestore(app);
@@ -57,6 +64,9 @@ export default class UserInfo extends Vue {
 	newScreenName = "";
 	newName = "";
 	newDOB = "";
+	myPhotoUrl = "";
+	auth: Auth | null = null;
+	user: User | null = null;
 
 	mounted(): void {
 		this.apiKey = process.env.MOVIE_DATABASE_API_KEY;
@@ -64,22 +74,28 @@ export default class UserInfo extends Vue {
 	}
 
 	async getUserInfo() {
-		const auth = getAuth();
-		const user = auth.currentUser;
-		if (user != null) {
-			const uid = user.uid;
-			const userDoc = doc(db, "users", `${uid}`);
-			const userSnap = await getDoc(userDoc);
-			if (userSnap.exists()) {
-				this.name = userSnap.data().name;
-				this.dob = userSnap.data().DOB;
-				this.screenName = userSnap.data().screenName;
-			} else {
-				const c: CollectionReference = collection(db, "users");
-				const d: DocumentReference = doc(c, uid);
-				setDoc(d, { DOB: "", name: "", screenName: "" });
+		this.auth = getAuth();
+		this.user = this.auth.currentUser;
+		onAuthStateChanged(this.auth, async (user: User | null) => {
+			if (user) {
+				const uid = user.uid;
+				console.log(uid)
+				this.myPhotoUrl = user?.photoURL ?? "";
+				console.log(this.myPhotoUrl)
+				const userDoc = doc(db, "users", `${uid}`);
+				const userSnap = await getDoc(userDoc);
+				if (userSnap.exists()) {
+					this.name = userSnap.data().name;
+					this.dob = userSnap.data().DOB;
+					this.screenName = userSnap.data().screenName;
+				} else {
+					const c: CollectionReference = collection(db, "users");
+					const d: DocumentReference = doc(c, uid);
+					setDoc(d, { DOB: "", name: "", screenName: "" });
+				}
 			}
-		}
+		});
+		
 	}
 
 	editName(): void {
