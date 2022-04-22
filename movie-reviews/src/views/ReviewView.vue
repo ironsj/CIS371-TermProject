@@ -39,6 +39,7 @@
             </tr>
         </table>
         </center>
+        <Review :title="currentTitle" v-if="currentTitle"/>
     </div>
 </template>
 
@@ -46,6 +47,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import NavBar from '@/components/NavBar.vue';
+import Review from '@/components/Review.vue'
 import axios, { Axios, AxiosResponse } from "axios";
 import { movieData, movies } from '@/datatype';
 import { initializeApp } from "firebase/app";
@@ -63,7 +65,7 @@ import {
         doc, getDoc,  updateDoc,
         getFirestore, setDoc,  
         CollectionReference, getDocs,
-        collection,deleteDoc,
+        collection,deleteDoc, Timestamp,
       } from "firebase/firestore";
 
 type publishedReviews = {
@@ -72,7 +74,8 @@ type publishedReviews = {
 };
 @Component({
     components: {
-        NavBar
+        NavBar,
+        Review
     },
 })
 
@@ -92,7 +95,7 @@ export default class MovieView extends Vue {
         this.apiKey = process.env.VUE_APP_MOVIE_DB_API_KEY;
         this.getDetails();
        // this.getReviews();
-   }
+    }
 
     getDetails(): void{
          let searchurl = ''.concat('https://api.themoviedb.org/3/movie/', this.id, '?api_key=', this.apiKey, '&lang=en-US')
@@ -108,7 +111,7 @@ export default class MovieView extends Vue {
         })
         .then((r: any) => JSON.parse(r.contents))
         .then((r: any) => {
-            this.currentTitle=r.title;
+            this.currentTitle= r.title;
             this.poster_path = r.poster_path;
             this.image_url = `https://image.tmdb.org/t/p/w500${this.poster_path}`
             this.reviews.push({title: r.title, release_date: r.release_date, id: r.id, poster_path: r.poster_path, overview: r.overview})
@@ -138,17 +141,18 @@ export default class MovieView extends Vue {
         const delDoc:DocumentReference = doc(db, "Movies", this.currentTitle, "Reviews", uid);
         deleteDoc(delDoc);
     }
+    
     reviewMovie(): void {
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth();
+        const user = auth.currentUser
         const uid = auth.currentUser!.uid;
-        console.log(this.currentTitle);
-        console.log(uid);
-        console.log(this.newReview);
         const locDoc:DocumentReference = doc(db, "Movies", this.currentTitle, "Reviews", uid);
         const docData = {
             newData: this.newReview,
+            userName: user!.displayName,
+            date: Timestamp.now()
         }
         this.newReview ="";
         setDoc(locDoc, docData);
