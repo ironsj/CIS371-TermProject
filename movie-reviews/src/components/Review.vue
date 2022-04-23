@@ -78,6 +78,7 @@ export default class Review extends Vue {
     display: flex;
     justify-content: center;
     align-content: center;
+    border:1px solid wheat;
 }
 
 #user{
