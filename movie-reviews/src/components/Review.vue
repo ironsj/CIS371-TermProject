@@ -1,10 +1,14 @@
 <template>
 	<div class="review">
-        <p>Profile Image</p>
-        <p>Name: {{name}}</p>
-        <p>Date: {{date}}</p>
-        <p>Rating</p>
-        <p>Review: {{review}}</p>
+        <div id="user">
+            <img :src="profilePic" v-if="profilePic.length > 0" width="32" />
+            <p>{{name}}</p>
+        </div>
+        <div id="rating">
+            <p>"{{review}}"</p>
+            <p>Rating</p>
+        </div>
+        <p id="date">Date: {{date}}</p>
 	</div>
 </template>
 
@@ -44,29 +48,17 @@ type Movie = {
 @Component
 export default class Review extends Vue {
     @Prop() title!: string;
-    auth: Auth | null = null;
-	user: User | null = null;
-    myPhotoUrl = "";
-    name = "";
-    review = "";
-    date = "";
+    @Prop() date!: string;
+    @Prop() profilePic!: string;
+    @Prop() review!: string;
+    @Prop() name!: string;
 
     mounted(): void{
         // Get all docs under cities (sub)collection
         console.log(this.title)
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const reviews = collection(db, "Movies", this.title, "Reviews");
-        getDocs(reviews).then((reviewQuery: QuerySnapshot) => {
-            reviewQuery.forEach((movieReview:QueryDocumentSnapshot) => {
-                const revData = movieReview.data();
-                console.log(revData.newData);
-                this.date = new Date(revData.date.seconds * 1000 + revData.date.nanoseconds / 1000000).toLocaleString();
-                console.log(revData.date)
-                this.review = revData.newData;
-                this.name = revData.userName;
-            });
-        });
+        
 
     }
 
@@ -75,6 +67,34 @@ export default class Review extends Vue {
 
 <style>
 .review{
+    font-family: 'Franklin Gothic FS Book','Helvetica Neue',Helvetica,Arial,sans-serif;
     color:white;
+    background: rgb(30, 30, 30);
+    width: 70%;
+    height: auto;
+    padding: 5px;
+    position:relative;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+#user{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+#rating{
+    width: 60%;
+    padding: 40px;
+    overflow-wrap: break-word;
+}
+
+#date{
+    position: absolute;
+    right: 0px; 
+    bottom: 0px;
 }
 </style>

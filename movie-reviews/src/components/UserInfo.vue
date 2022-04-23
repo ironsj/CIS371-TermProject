@@ -1,6 +1,10 @@
 <template>
 	<div class="userInfo">
+<<<<<<< HEAD
 		<p :name="name">Name: {{ name }}</p>
+=======
+		<p>Name: {{ name }}</p>
+>>>>>>> dc035e33a0c4adb87d6cf732cdee669cf35052e6
 		<input type="text" v-model="newName" />
 		<button @click="editName">Edit Name</button>
 		<img
@@ -9,10 +13,17 @@
 			v-if="myPhotoUrl.length > 0"
 			width="256"
 		/>
+<<<<<<< HEAD
 		<p :screenName="screenName">Screen Name: {{ screenName }}</p>
 		<input type="text" v-model="newScreenName" />
 		<button @click="editScreenName">Edit Screen Name</button>
 		<p :dob="dob">Date of Birth: {{ dob }}</p>
+=======
+		<p>User Name: {{ screenName }}</p>
+		<input type="text" v-model="newScreenName" />
+		<button @click="editScreenName">Edit Screen Name</button>
+		<p>DOB: {{ dob }}</p>
+>>>>>>> dc035e33a0c4adb87d6cf732cdee669cf35052e6
 		<input type="date" v-model="newDOB" />
 		<button @click="editDOB">Edit DOB</button>
 		<p>Movies Reviewed: (Get Movie List from Firestore)</p>
@@ -98,6 +109,7 @@ export default class UserInfo extends Vue {
 	}
 
 	editName(): void {
+		console.log(this.newName);
 		const auth = getAuth();
 		if (auth != null) {
 			if (auth.currentUser != null) {
@@ -105,6 +117,7 @@ export default class UserInfo extends Vue {
 				const c: CollectionReference = collection(db, "users");
 				const d: DocumentReference = doc(c, `${uid}`);
 				updateDoc(d, { name: this.newName });
+				this.name = this.newName;
 			}
 		}
 		this.getUserInfo();
@@ -118,6 +131,7 @@ export default class UserInfo extends Vue {
 				const c: CollectionReference = collection(db, "users");
 				const d: DocumentReference = doc(c, `${uid}`);
 				updateDoc(d, { screenName: this.newScreenName });
+				this.screenName = this.newScreenName
 			}
 		}
 		this.getUserInfo();
@@ -131,6 +145,7 @@ export default class UserInfo extends Vue {
 				const c: CollectionReference = collection(db, "users");
 				const d: DocumentReference = doc(c, `${uid}`);
 				updateDoc(d, { DOB: this.newDOB });
+				this.dob = this.newDOB
 			}
 		}
 		this.getUserInfo();
