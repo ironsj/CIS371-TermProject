@@ -60,7 +60,8 @@ import {
         doc, getDoc,  updateDoc,
         getFirestore, setDoc,  
         CollectionReference, getDocs,
-        collection,deleteDoc,
+        collection,deleteDoc, QuerySnapshot, 
+        QueryDocumentSnapshot,
       } from "firebase/firestore";
 
 type publishedReviews = {
@@ -86,7 +87,7 @@ export default class MovieView extends Vue {
     mounted(): void {
         this.apiKey = process.env.VUE_APP_MOVIE_DB_API_KEY;
         this.getDetails();
-       // this.getReviews();
+      //  this.getReviews();
    }
 
     getDetails(): void{
@@ -108,20 +109,9 @@ export default class MovieView extends Vue {
     })
     }
     
-    // getReviews(): void {
-    //     const app = initializeApp(firebaseConfig);
-    //     const db = getFirestore(app);
-    //     if(this.totalReviews.length > 0){
-    //     const movieCollection:CollectionReference = collection(db, "Movies", this.currentTitle, "Reviews");
-    //     getDocs(movieCollection)
-    //     .then((myQueryRes: QuerySnapshot) => {
-    //         myQueryRes.forEach((myDoc: QueryDocumentSnapshot)=> {
-    //         this.totalReviews.push({userId: myDoc.id, userData: myDoc.data().newData})
-    //         console.log(this.totalReviews);
-    //         })
-    //     })
-    // }
-   // }
+     //getReviews(): void {
+        
+     //}
 
     deleteReview(): void{
         const app = initializeApp(firebaseConfig);
@@ -140,11 +130,13 @@ export default class MovieView extends Vue {
         console.log(uid);
         console.log(this.newReview);
         const locDoc:DocumentReference = doc(db, "Movies", this.currentTitle, "Reviews", uid);
+        const personalDoc:DocumentReference = doc(db, uid, this.currentTitle);
         const docData = {
             newData: this.newReview,
         }
         this.newReview ="";
         setDoc(locDoc, docData);
+        setDoc(personalDoc, docData);
     }
 }
 
