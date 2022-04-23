@@ -64,7 +64,7 @@ import {
         doc, getDoc,  updateDoc,
         getFirestore, setDoc,  
         CollectionReference, getDocs,
-        collection,deleteDoc, Timestamp, QuerySnapshot, QueryDocumentSnapshot,
+        collection,deleteDoc, Timestamp, QuerySnapshot, QueryDocumentSnapshot, addDoc,
       } from "firebase/firestore";
 
 type publishedReviews = {
@@ -158,7 +158,7 @@ export default class MovieView extends Vue {
         const user = auth.currentUser
         const uid = auth.currentUser!.uid;
         const locDoc:DocumentReference = doc(db, "Movies", this.currentTitle, "Reviews", uid);
-        const personalDoc:DocumentReference = doc(db, uid, this.currentTitle);
+        const personalDoc:CollectionReference = collection(db, "PersonalReviews", uid, this.currentTitle);
         const docData = {
             newData: this.newReview,
             userName: user!.displayName,
@@ -171,7 +171,7 @@ export default class MovieView extends Vue {
         }
         this.newReview ="";
         setDoc(locDoc, docData);
-        setDoc(personalDoc, personalDocData);
+        addDoc(personalDoc, personalDocData);
     }
 }
 </script>
