@@ -1,24 +1,20 @@
 <template>
 	<div class="userInfo">
-		<p :name="name">Name: {{ name }}</p>
-		<input type="text" v-model="newName" />
-		<button @click="editName">Edit Name</button>
 		<img
 			alt="Your Photo"
 			:src="myPhotoUrl"
 			v-if="myPhotoUrl.length > 0"
 			width="256"
 		/>
+		<p :name="name">Name: {{ name }}</p>
+		<input type="text" v-model="newName" />
+		<button @click="editName">Edit Name</button>
 		<p :screenName="screenName">Screen Name: {{ screenName }}</p>
 		<input type="text" v-model="newScreenName" />
 		<button @click="editScreenName">Edit Screen Name</button>
 		<p :dob="dob">Date of Birth: {{ dob }}</p>
 		<input type="date" v-model="newDOB" />
 		<button @click="editDOB">Edit DOB</button>
-		<p>Movies Reviewed: (Get Movie List from Firestore)</p>
-		<p>Average Movie Rating Given: 0.0</p>
-		<p>Highest rated Movie by You: (insert movie here)</p>
-		<p>Lowest rated Movie by You: (insert movie here)</p>
 	</div>
 </template>
 
