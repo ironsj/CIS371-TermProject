@@ -25,7 +25,7 @@
                 <label for="review">Leave a Review:</label><br>
                 <textarea rows="10" name="review" v-model="newReview"></textarea><br>
                 <br>
-                <button type="button" @click="reviewMovie">Post</button><button type="button" @click="deleteReview">Delete Review</button>
+                <button type="button" @click="reviewMovie">Post/Update</button><button type="button" @click="deleteReview">Delete Review</button>
             </form>
         </center>
         <template v-if="currentTitle">
@@ -180,14 +180,17 @@ export default class MovieView extends Vue {
                 else if(update === "modified"){
                     this.totalReviews.forEach((element, index) =>{
                         if(chg.doc.id === element.id){
-                            this.totalReviews[index] = {
+                            console.log(element.id);
+                            console.log(newData.newData);
+                            if(chg.doc.id === element.id) this.totalReviews.splice(index, 1);
+                            this.totalReviews.push( {
                                 title: this.currentTitle,
                                 date: new Date(newData.date.seconds * 1000 + newData.date.nanoseconds / 1000000).toLocaleString(),
                                 profilePic: newData.profilePhoto ?? "",
                                 review: newData.newData,
                                 name: newData.userName,
                                 id: newData.id,
-                            }
+                            });
                         }
                     })
                 }
