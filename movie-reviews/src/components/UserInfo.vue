@@ -91,15 +91,21 @@ export default class UserInfo extends Vue {
 					this.dob = userPrivateSnap.data().dob;
 					this.screenName = userPubSnap.data().screenName;
 				} else {
-					const c: CollectionReference = collection(
+					const cPub: CollectionReference = collection(
 						db,
 						"users",
 						`${uid}`,
 						"public"
 					);
-					const dPublic: DocumentReference = doc(c, `${uid}`);
+					const cPrivate: CollectionReference = collection(
+						db,
+						"users",
+						`${uid}`,
+						"private"
+					);
+					const dPublic: DocumentReference = doc(cPub, `${uid}`);
 					setDoc(dPublic, { name: "", screenName: "" });
-					const dPrivate: DocumentReference = doc(c, `${uid}`);
+					const dPrivate: DocumentReference = doc(cPrivate, `${uid}`);
 					setDoc(dPrivate, { dob: "" });
 				}
 			}
@@ -157,7 +163,7 @@ export default class UserInfo extends Vue {
 					"private"
 				);
 				const d: DocumentReference = doc(c, `${uid}`);
-				updateDoc(d, { DOB: this.newDOB });
+				updateDoc(d, { dob: this.newDOB });
 				this.dob = this.newDOB;
 			}
 		}
