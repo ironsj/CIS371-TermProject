@@ -64,7 +64,7 @@ import {
         doc, getDoc,  updateDoc,
         getFirestore, setDoc,  
         CollectionReference, getDocs,
-        collection,deleteDoc, Timestamp, QuerySnapshot, QueryDocumentSnapshot,
+        collection,deleteDoc, Timestamp, QuerySnapshot, QueryDocumentSnapshot, onSnapshot,
       } from "firebase/firestore";
 
 type publishedReviews = {
@@ -73,6 +73,7 @@ type publishedReviews = {
     profilePic: string;
     review: string;
     name: string;
+    id: string;
 };
 @Component({
 	components: {
@@ -90,10 +91,20 @@ export default class MovieView extends Vue {
     poster_path="";
     image_url = "";
     userPhotoURL = "";
+    auth: Auth | null = null;
+    user: User | null = null;
+    uid = ""
 
 
     mounted(): void {
         this.apiKey = process.env.VUE_APP_MOVIE_DB_API_KEY;
+        this.auth = getAuth();
+        this.user = this.auth.currentUser
+        onAuthStateChanged(this.auth, (user: User | null) => {
+            if (user) {
+                this.uid = user.uid;
+            }
+        });
         this.getDetails();
     }
 
@@ -125,19 +136,69 @@ export default class MovieView extends Vue {
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const reviews = collection(db, "Movies", this.currentTitle, "Reviews");
-            getDocs(reviews).then((reviewQuery: QuerySnapshot) => {
-                reviewQuery.forEach((movieReview:QueryDocumentSnapshot) => {
-                    const revData = movieReview.data();
-                    console.log(revData.newData);
-                    this.totalReviews.push({
-                        title: this.currentTitle,
-                        date: new Date(revData.date.seconds * 1000 + revData.date.nanoseconds / 1000000).toLocaleString(),
-                        profilePic: revData.profilePhoto ?? "",
-                        review: revData.newData,
-                        name: revData.userName
-                    })
+        getDocs(reviews).then((reviewQuery: QuerySnapshot) => {
+            reviewQuery.forEach((movieReview:QueryDocumentSnapshot) => {
+                const revData = movieReview.data();
+                console.log(revData.newData);
+                this.totalReviews.push({
+                    title: this.currentTitle,
+                    date: new Date(revData.date.seconds * 1000 + revData.date.nanoseconds / 1000000).toLocaleString(),
+                    profilePic: revData.profilePhoto ?? "",
+                    review: revData.newData,
+                    name: revData.userName,
+                    id: revData.id,
+                })
             });
+        }).then(() =>{
+            this.listen();
         });
+
+    }
+
+    listen():void{
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const listener = collection(db, "Movies", this.currentTitle, "Reviews");
+        onSnapshot(listener, (s:QuerySnapshot) =>{
+            for(let chg of s.docChanges()){
+                const newData = chg.doc.data()
+                const update = chg.type;
+                console.log(chg.doc.id, chg.type)
+                if(update === "added"){
+                    const duplicate = this.totalReviews.map((r: publishedReviews) => r.id).some((s:string) => s === chg.doc.id);
+                    if(!duplicate){
+                        this.totalReviews.push( {
+                            title: this.currentTitle,
+                            date: new Date(newData.date.seconds * 1000 + newData.date.nanoseconds / 1000000).toLocaleString(),
+                            profilePic: newData.profilePhoto ?? "",
+                            review: newData.newData,
+                            name: newData.userName,
+                            id: newData.id,
+                        });
+                    }
+                }
+                else if(update === "modified"){
+                    this.totalReviews.forEach((element, index) =>{
+                        if(chg.doc.id === element.id){
+                            this.totalReviews[index] = {
+                                title: this.currentTitle,
+                                date: new Date(newData.date.seconds * 1000 + newData.date.nanoseconds / 1000000).toLocaleString(),
+                                profilePic: newData.profilePhoto ?? "",
+                                review: newData.newData,
+                                name: newData.userName,
+                                id: newData.id,
+                            }
+                        }
+                    })
+                }
+                else if(update === "removed"){
+                    this.totalReviews.forEach((element, index) =>{
+                        if(chg.doc.id === element.id) this.totalReviews.splice(index, 1);
+                    })
+                }
+            }
+        })
+
     }
 
     deleteReview(): void{
@@ -164,6 +225,7 @@ export default class MovieView extends Vue {
             userName: user!.displayName,
             date: Timestamp.now(),
             profilePhoto: user!.photoURL ?? "",
+            id: this.uid,
         }
         const personalDocData = {
             newData: this.newReview,

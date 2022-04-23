@@ -6,7 +6,6 @@
         </div>
         <div id="rating">
             <p>"{{review}}"</p>
-            <p>Rating</p>
         </div>
         <p id="date">Date: {{date}}</p>
 	</div>
