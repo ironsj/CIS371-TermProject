@@ -1,7 +1,7 @@
 <template>
 	<div class="userInfo">
-		<p>Name: Henry Hank</p>
-		<input type="text" :value="newName" />
+		<p>Name: {{ name }}</p>
+		<input type="text" v-model="newName" />
 		<button @click="editName">Edit Name</button>
 		<img
 			alt="Your Photo"
@@ -9,12 +9,12 @@
 			v-if="myPhotoUrl.length > 0"
 			width="256"
 		/>
-		<p>User Name: Henry1234</p>
-		<input type="text" :value="newScreenName" />
+		<p>User Name: {{ screenName }}</p>
+		<input type="text" v-model="newScreenName" />
 		<button @click="editScreenName">Edit Screen Name</button>
-		<p>DOB: 3/7/1990</p>
-		<input type="date" :value="newDOB" />
-		<button @click="editDOB">Edit Name</button>
+		<p>DOB: {{ dob }}</p>
+		<input type="date" v-model="newDOB" />
+		<button @click="editDOB">Edit DOB</button>
 		<p>Movies Reviewed: (Get Movie List from Firestore)</p>
 		<p>Average Movie Rating Given: 0.0</p>
 		<p>Highest rated Movie by You: (insert movie here)</p>
@@ -39,12 +39,12 @@ import {
 } from "firebase/firestore";
 import { initializeApp, FirebaseApp } from "firebase/app";
 import {
-  getAuth,
-  onAuthStateChanged,
-  User,
-  Auth,
-  signOut,
-  deleteUser,
+	getAuth,
+	onAuthStateChanged,
+	User,
+	Auth,
+	signOut,
+	deleteUser,
 } from "firebase/auth";
 
 const app: FirebaseApp = initializeApp(firebaseConfig);
@@ -79,9 +79,9 @@ export default class UserInfo extends Vue {
 		onAuthStateChanged(this.auth, async (user: User | null) => {
 			if (user) {
 				const uid = user.uid;
-				console.log(uid)
+				console.log(uid);
 				this.myPhotoUrl = user?.photoURL ?? "";
-				console.log(this.myPhotoUrl)
+				console.log(this.myPhotoUrl);
 				const userDoc = doc(db, "users", `${uid}`);
 				const userSnap = await getDoc(userDoc);
 				if (userSnap.exists()) {
@@ -95,10 +95,10 @@ export default class UserInfo extends Vue {
 				}
 			}
 		});
-		
 	}
 
 	editName(): void {
+		console.log(this.newName);
 		const auth = getAuth();
 		if (auth != null) {
 			if (auth.currentUser != null) {
@@ -106,6 +106,7 @@ export default class UserInfo extends Vue {
 				const c: CollectionReference = collection(db, "users");
 				const d: DocumentReference = doc(c, uid);
 				updateDoc(d, { name: this.newName });
+				this.name = this.newName;
 			}
 		}
 	}
@@ -118,6 +119,7 @@ export default class UserInfo extends Vue {
 				const c: CollectionReference = collection(db, "users");
 				const d: DocumentReference = doc(c, uid);
 				updateDoc(d, { screenName: this.newScreenName });
+				this.screenName = this.newScreenName
 			}
 		}
 	}
@@ -130,6 +132,7 @@ export default class UserInfo extends Vue {
 				const c: CollectionReference = collection(db, "users");
 				const d: DocumentReference = doc(c, uid);
 				updateDoc(d, { DOB: this.newDOB });
+				this.dob = this.newDOB
 			}
 		}
 	}
