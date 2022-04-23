@@ -163,9 +163,13 @@ export default class MovieView extends Vue {
             date: Timestamp.now(),
             profilePhoto: user!.photoURL ?? "",
         }
+        const personalDocData = {
+            newData: this.newReview,
+            date: Timestamp.now(),
+        }
         this.newReview ="";
         setDoc(locDoc, docData);
-        setDoc(personalDoc, docData);
+        setDoc(personalDoc, personalDocData);
     }
 }
 </script>
