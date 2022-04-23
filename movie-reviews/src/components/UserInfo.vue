@@ -1,7 +1,7 @@
 <template>
 	<div class="userInfo">
-		<p>Name: {{ name }}</p>
-		<input type="text" :value="newName" />
+		<p :name="name">Name: {{ name }}</p>
+		<input type="text" v-model="newName" />
 		<button @click="editName">Edit Name</button>
 		<img
 			alt="Your Photo"
@@ -9,11 +9,11 @@
 			v-if="myPhotoUrl.length > 0"
 			width="256"
 		/>
-		<p>User Name: {{ userName }}</p>
-		<input type="text" :value="newScreenName" />
+		<p :screenName="screenName">Screen Name: {{ screenName }}</p>
+		<input type="text" v-model="newScreenName" />
 		<button @click="editScreenName">Edit Screen Name</button>
-		<p>DOB: {{ DOB }}</p>
-		<input type="date" :value="newDOB" />
+		<p :dob="dob">Date of Birth: {{ dob }}</p>
+		<input type="date" v-model="newDOB" />
 		<button @click="editDOB">Edit DOB</button>
 		<p>Movies Reviewed: (Get Movie List from Firestore)</p>
 		<p>Average Movie Rating Given: 0.0</p>
@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { firebaseConfig } from "@/myconfig";
+import { firebaseConfig } from "../myconfig";
 import { Component, Vue } from "vue-property-decorator";
 import {
 	getFirestore,
@@ -90,7 +90,7 @@ export default class UserInfo extends Vue {
 					this.screenName = userSnap.data().screenName;
 				} else {
 					const c: CollectionReference = collection(db, "users");
-					const d: DocumentReference = doc(c, uid);
+					const d: DocumentReference = doc(c, `${uid}`);
 					setDoc(d, { DOB: "", name: "", screenName: "" });
 				}
 			}
@@ -103,10 +103,11 @@ export default class UserInfo extends Vue {
 			if (auth.currentUser != null) {
 				const uid = auth.currentUser.uid;
 				const c: CollectionReference = collection(db, "users");
-				const d: DocumentReference = doc(c, uid);
+				const d: DocumentReference = doc(c, `${uid}`);
 				updateDoc(d, { name: this.newName });
 			}
 		}
+		this.getUserInfo();
 	}
 
 	editScreenName(): void {
@@ -115,10 +116,11 @@ export default class UserInfo extends Vue {
 			if (auth.currentUser != null) {
 				const uid = auth.currentUser.uid;
 				const c: CollectionReference = collection(db, "users");
-				const d: DocumentReference = doc(c, uid);
+				const d: DocumentReference = doc(c, `${uid}`);
 				updateDoc(d, { screenName: this.newScreenName });
 			}
 		}
+		this.getUserInfo();
 	}
 
 	editDOB(): void {
@@ -127,10 +129,11 @@ export default class UserInfo extends Vue {
 			if (auth.currentUser != null) {
 				const uid = auth.currentUser.uid;
 				const c: CollectionReference = collection(db, "users");
-				const d: DocumentReference = doc(c, uid);
+				const d: DocumentReference = doc(c, `${uid}`);
 				updateDoc(d, { DOB: this.newDOB });
 			}
 		}
+		this.getUserInfo();
 	}
 }
 </script>
