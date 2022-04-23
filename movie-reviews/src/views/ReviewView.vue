@@ -147,6 +147,8 @@ export default class MovieView extends Vue {
         const uid = auth.currentUser!.uid;
         const delDoc:DocumentReference = doc(db, "Movies", this.currentTitle, "Reviews", uid);
         deleteDoc(delDoc);
+        const delUserDoc:DocumentReference = doc(db, uid, this.currentTitle);
+        deleteDoc(delUserDoc);
     }
     
     reviewMovie(): void {
