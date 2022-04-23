@@ -1,10 +1,6 @@
 <template>
 	<div class="userInfo">
-<<<<<<< HEAD
 		<p :name="name">Name: {{ name }}</p>
-=======
-		<p>Name: {{ name }}</p>
->>>>>>> dc035e33a0c4adb87d6cf732cdee669cf35052e6
 		<input type="text" v-model="newName" />
 		<button @click="editName">Edit Name</button>
 		<img
@@ -13,17 +9,10 @@
 			v-if="myPhotoUrl.length > 0"
 			width="256"
 		/>
-<<<<<<< HEAD
 		<p :screenName="screenName">Screen Name: {{ screenName }}</p>
 		<input type="text" v-model="newScreenName" />
 		<button @click="editScreenName">Edit Screen Name</button>
 		<p :dob="dob">Date of Birth: {{ dob }}</p>
-=======
-		<p>User Name: {{ screenName }}</p>
-		<input type="text" v-model="newScreenName" />
-		<button @click="editScreenName">Edit Screen Name</button>
-		<p>DOB: {{ dob }}</p>
->>>>>>> dc035e33a0c4adb87d6cf732cdee669cf35052e6
 		<input type="date" v-model="newDOB" />
 		<button @click="editDOB">Edit DOB</button>
 		<p>Movies Reviewed: (Get Movie List from Firestore)</p>
@@ -93,16 +82,25 @@ export default class UserInfo extends Vue {
 				console.log(uid);
 				this.myPhotoUrl = user?.photoURL ?? "";
 				console.log(this.myPhotoUrl);
-				const userDoc = doc(db, "users", `${uid}`);
-				const userSnap = await getDoc(userDoc);
-				if (userSnap.exists()) {
-					this.name = userSnap.data().name;
-					this.dob = userSnap.data().DOB;
-					this.screenName = userSnap.data().screenName;
+				const userPublicDoc = doc(db, "users", `${uid}`, "public", `${uid}`);
+				const userPrivateDoc = doc(db, "users", `${uid}`, "private", `${uid}`);
+				const userPubSnap = await getDoc(userPublicDoc);
+				const userPrivateSnap = await getDoc(userPrivateDoc);
+				if (userPubSnap.exists() && userPrivateSnap.exists()) {
+					this.name = userPubSnap.data().name;
+					this.dob = userPrivateSnap.data().dob;
+					this.screenName = userPubSnap.data().screenName;
 				} else {
-					const c: CollectionReference = collection(db, "users");
-					const d: DocumentReference = doc(c, `${uid}`);
-					setDoc(d, { DOB: "", name: "", screenName: "" });
+					const c: CollectionReference = collection(
+						db,
+						"users",
+						`${uid}`,
+						"public"
+					);
+					const dPublic: DocumentReference = doc(c, `${uid}`);
+					setDoc(dPublic, { name: "", screenName: "" });
+					const dPrivate: DocumentReference = doc(c, `${uid}`);
+					setDoc(dPrivate, { dob: "" });
 				}
 			}
 		});
@@ -114,7 +112,12 @@ export default class UserInfo extends Vue {
 		if (auth != null) {
 			if (auth.currentUser != null) {
 				const uid = auth.currentUser.uid;
-				const c: CollectionReference = collection(db, "users");
+				const c: CollectionReference = collection(
+					db,
+					"users",
+					`${uid}`,
+					"public"
+				);
 				const d: DocumentReference = doc(c, `${uid}`);
 				updateDoc(d, { name: this.newName });
 				this.name = this.newName;
@@ -128,10 +131,15 @@ export default class UserInfo extends Vue {
 		if (auth != null) {
 			if (auth.currentUser != null) {
 				const uid = auth.currentUser.uid;
-				const c: CollectionReference = collection(db, "users");
+				const c: CollectionReference = collection(
+					db,
+					"users",
+					`${uid}`,
+					"public"
+				);
 				const d: DocumentReference = doc(c, `${uid}`);
 				updateDoc(d, { screenName: this.newScreenName });
-				this.screenName = this.newScreenName
+				this.screenName = this.newScreenName;
 			}
 		}
 		this.getUserInfo();
@@ -142,10 +150,15 @@ export default class UserInfo extends Vue {
 		if (auth != null) {
 			if (auth.currentUser != null) {
 				const uid = auth.currentUser.uid;
-				const c: CollectionReference = collection(db, "users");
+				const c: CollectionReference = collection(
+					db,
+					"users",
+					`${uid}`,
+					"private"
+				);
 				const d: DocumentReference = doc(c, `${uid}`);
 				updateDoc(d, { DOB: this.newDOB });
-				this.dob = this.newDOB
+				this.dob = this.newDOB;
 			}
 		}
 		this.getUserInfo();
